@@ -79,7 +79,7 @@ export default function ComingSoon() {
             </div>
 
             {/* Professional Emails Footer */}
-            <div className="absolute bottom-12 left-0 w-full px-6 md:px-16 flex flex-col md:flex-row justify-between items-center gap-6 border-t border-white/10 pt-10">
+            <div className="hidden md:flex absolute bottom-12 left-0 w-full px-6 md:px-16 justify-between items-center gap-6 border-t border-white/10 pt-10">
                 <div className="contact-item flex flex-col items-center md:items-start">
                     <span className="text-[9px] uppercase tracking-widest text-[#D4AF37] font-bold mb-1">General Inquiry</span>
                     <a href="mailto:info@buildfix.org" className="text-xs hover:text-[#D4AF37] transition-colors">info@buildfix.org</a>
