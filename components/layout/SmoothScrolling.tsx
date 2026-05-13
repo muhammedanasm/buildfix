@@ -1,8 +1,8 @@
 "use client";
 
-import { ReactLenis } from "@studio-freight/react-lenis";
 import { usePathname } from "next/navigation";
 import { useEffect, ReactNode } from "react";
+import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -10,18 +10,35 @@ if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function SmoothScrolling({ children }: { children: ReactNode }) {
+export default function SmoothScrolling({
+    children,
+}: {
+    children: ReactNode;
+}) {
     const pathname = usePathname();
 
     useEffect(() => {
+        const lenis = new Lenis({
+            duration: 1.5,
+            smoothWheel: true,
+        });
+
+        lenis.on("scroll", ScrollTrigger.update);
+
+        const raf = (time: number) => {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        };
+
+        requestAnimationFrame(raf);
+
         window.scrollTo(0, 0);
         ScrollTrigger.refresh();
+
+        return () => {
+            lenis.destroy();
+        };
     }, [pathname]);
 
-    return (
-        <ReactLenis root options={{ lerp: 0.08, duration: 1.5 }}>
-
-            {children as any}
-        </ReactLenis>
-    );
+    return <>{children}</>;
 }
