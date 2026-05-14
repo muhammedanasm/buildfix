@@ -1,131 +1,162 @@
 "use client";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import Image from "next/image";
 
 export default function Hero() {
-    const textRef = useRef(null);
-    const goldBlobRef = useRef(null);
-    const bgRef = useRef(null);
+    const sectionRef = useRef(null);
+    const videoRef = useRef(null);
 
     useEffect(() => {
-        const tl = gsap.timeline();
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline();
 
-        // Background Subtle Zoom Animation
-        gsap.to(".hero-bg-img", {
-            scale: 1.15,
-            duration: 20,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
+            // Video subtle zoom
+            gsap.to(videoRef.current, {
+                scale: 1.1,
+                duration: 10,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
 
-        // Gold Blob Movement
-        gsap.to(goldBlobRef.current, {
-            x: 40,
-            y: 30,
-            duration: 8,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
-
-        // Text Reveal Animation
-        tl.from(".hero-text", {
-            y: 150,
-            opacity: 0,
-            duration: 1.8,
-            stagger: 0.15,
-            ease: "power4.out",
-            delay: 0.8
-        })
-            .from(".hero-subtext", {
+            // Text Masking Reveal
+            tl.from(".hero-line", {
+                y: "100%",
                 opacity: 0,
-                y: 20,
-                duration: 1,
-                ease: "power3.out"
-            }, "-=1")
-            .from(".hero-footer-line", {
-                scaleX: 0,
-                transformOrigin: "left",
                 duration: 1.5,
-                ease: "expo.inOut"
-            }, "-=1")
-            .from(".hero-footer-content", {
-                opacity: 0,
-                y: 20,
-                duration: 1,
-                stagger: 0.2
-            }, "-=0.5");
+                stagger: 0.15,
+                ease: "expo.out",
+                delay: 0.5
+            })
+                .from(".hero-desc", {
+                    opacity: 0,
+                    y: 30,
+                    duration: 1,
+                    ease: "power3.out"
+                }, "-=0.8")
+                .from(".hero-btns", {
+                    opacity: 0,
+                    y: 20,
+                    duration: 1,
+                    stagger: 0.2,
+                    ease: "power3.out"
+                }, "-=0.6")
+                .from(".hero-footer-item", {
+                    opacity: 0,
+                    y: 20,
+                    duration: 1,
+                    stagger: 0.2
+                }, "-=0.5");
+        }, sectionRef);
+
+        return () => ctx.revert();
     }, []);
 
     return (
-        <section className="relative h-screen w-full overflow-hidden bg-black flex items-center">
+        <section ref={sectionRef} className="relative h-screen w-full overflow-hidden bg-black flex items-center">
 
-            {/* Optimized Background Image */}
-            <div ref={bgRef} className="absolute inset-0 z-0 bg-[#0a0a0a]">
-                <Image
-                    src="/images/hero-bg.png" // ഫയൽ നെയിം കൃത്യമാണെന്ന് ഉറപ്പുവരുത്തുക
-                    alt="Modern Architecture"
-                    fill
-                    priority
-                    className="hero-bg-img object-cover opacity-100 transition-transform" // Opacity 40-ൽ നിന്ന് 80 ആക്കി
-                />
-                {/* ഇമേജ് കൂടുതൽ വ്യക്തമാകാൻ ഗ്രേഡിയന്റ് അല്പം ലൈറ്റ് ആക്കി */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-black/10" />
+            {/* Background Video */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
+                <video
+                    ref={videoRef}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="h-full w-full object-cover opacity-60"
+                >
+                    <source src="/videos/hero.mp4" type="video/mp4" />
+                </video>
+                {/* Dark Overlays for Readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/60" />
+                <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]" />
             </div>
-
-            {/* GSAP Animated Gold Element */}
-            <div
-                ref={goldBlobRef}
-                className="absolute -top-32 -left-32 w-[700px] h-[700px] bg-[#D4AF37] opacity-15 blur-[140px] rounded-full pointer-events-none"
-            />
 
             {/* Main Content */}
             <div className="relative z-10 px-6 md:px-16 lg:px-24 w-full pt-20">
-                <div ref={textRef} className="max-w-7xl">
+                <div className="max-w-6xl">
                     <div className="overflow-hidden">
-                        <h1 className="hero-text text-[13vw] md:text-[8.5vw] font-bold leading-[0.82] tracking-tighter uppercase text-white">
-                            BUILD FIX
-                        </h1>
-                    </div>
-                    <div className="overflow-hidden">
-                        <h1 className="hero-text text-[13vw] md:text-[8.5vw] font-bold leading-[0.82] tracking-tighter uppercase text-white">
-                            CONTRACTING
-                        </h1>
-                    </div>
-                    <div className="overflow-hidden">
-                        <h1 className="hero-text text-[13vw] md:text-[8.5vw] font-bold leading-[0.82] tracking-tighter uppercase text-white/30">
-                            COMPANY
-                        </h1>
+                        <span className="hero-line block text-[#F5F5F0] animate-pulse text-[10px] md:text-xs tracking-[0.5em] uppercase font-bold mb-6">
+                            Engineering Excellence
+                        </span>
                     </div>
 
-                    <p className="hero-subtext mt-10 text-[#D4AF37] font-semibold tracking-[0.4em] uppercase text-[10px] md:text-xs">
-                        Built To Perform, Fixed to Last
+                    <div className="space-y-2">
+                        <div className="overflow-hidden">
+                            <h1 className="hero-line text-[11vw] md:text-[7vw] font-bold leading-[0.85] tracking-tighter uppercase text-white">
+                                BUILD FIX
+                            </h1>
+                        </div>
+                        <div className="overflow-hidden">
+                            <h1 className="hero-line text-[11vw] md:text-[7vw] font-bold leading-[0.85] tracking-tighter uppercase text-white">
+                                CONTRACTING
+                            </h1>
+                        </div>
+                        <div className="overflow-hidden">
+                            <h1 className="hero-line text-[11vw] md:text-[7vw] font-light leading-[0.85] tracking-tighter uppercase text-white/30 italic lowercase">
+                                Company.
+                            </h1>
+                        </div>
+                    </div>
+
+                    <p className="hero-desc mt-10 text-white/60 text-sm md:text-lg max-w-2xl leading-relaxed font-light">
+                        From concept to completion, we deliver high-quality <span className="text-white font-medium">integrated MEP, specialized Audio-Visual, and aquatic infrastructure</span> solutions tailored to the evolving demands of modern infrastructure.
+                    </p>
+
+                    {/* CTA Buttons - Framer Style */}
+                    <div className="hero-btns mt-12 flex flex-wrap gap-6">
+
+                        {/* Consult Our Experts - WhatsApp Redirect */}
+                        <a
+                            href="https://wa.me/966544005480"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group relative px-10 py-4 bg-white text-black text-[10px] uppercase tracking-[0.3em] font-bold rounded-full overflow-hidden transition-all duration-500 flex items-center"
+                        >
+                            {/* Text must be relative and z-10 to stay on top of the sliding background */}
+                            <span className="relative z-10 transition-colors duration-500 group-hover:text-black font-sans">
+                                Consult Our Experts
+                            </span>
+
+                            {/* Sliding Background Layer */}
+                            <div className="absolute inset-0 bg-[#d4af37] translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                        </a>
+
+                        {/* View Our Divisions - Section Navigation */}
+                        <a
+                            href="#services"
+                            className="group relative px-10 py-4 border border-white/20 text-white text-[10px] uppercase tracking-[0.3em] font-bold rounded-full overflow-hidden transition-all duration-500 flex items-center"
+                        >
+                            <span className="relative z-10 transition-colors duration-500 group-hover:text-black font-sans">
+                                View Our Divisions
+                            </span>
+
+                            {/* Sliding Background Layer */}
+                            <div className="absolute inset-0 bg-[#d4af37] translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+
+            {/* Hero Footer Info Section */}
+            <div className="absolute bottom-10 left-0 w-full px-6 md:px-16 hidden md:flex justify-between items-end gap-10">
+                <div className="hero-footer-item flex flex-col gap-1">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-gold font-bold">Built to Perform</span>
+                    <h3 className="text-white text-sm font-light tracking-widest uppercase">Fixed to Last</h3>
+                </div>
+
+                <div className="hero-footer-item h-[1px] bg-white/10 flex-grow mx-10 mb-2"></div>
+
+                <div className="hero-footer-item max-w-xs text-right">
+                    <p className="text-[9px] leading-relaxed text-white/40 uppercase tracking-[0.2em] font-medium">
+                        Specializing in residential, commercial, and hospitality infrastructure projects.
                     </p>
                 </div>
             </div>
 
-            {/* Hero Footer Section */}
-            <div className="absolute bottom-12 left-0 w-full px-6 md:px-16 z-20">
-                <div className="hero-footer-line h-[1px] bg-white/10 w-full mb-8"></div>
-
-                <div className="flex flex-col md:flex-row justify-between items-end gap-8">
-                    <div className="hero-footer-content flex flex-col gap-1">
-                        <span className="text-[9px] uppercase tracking-[0.3em] text-white/40 font-bold">Project Sector</span>
-                        <h3 className="text-white text-lg font-light tracking-wide italic">Engineering Solutions</h3>
-                    </div>
-
-                    <div className="hero-footer-content max-w-sm text-right">
-                        <p className="text-[10px] leading-relaxed text-white/50 uppercase tracking-[0.15em]">
-                            Specializing in integrated MEP, Audio-Visual, and civil works tailored to modern infrastructure.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Noise Texture Overlay */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+            {/* Premium Noise Texture */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
         </section>
     );
 }

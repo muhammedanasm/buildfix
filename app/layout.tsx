@@ -1,10 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins, Tenor_Sans } from "next/font/google"
 import "./globals.css";
 import SmoothScrolling from "@/components/layout/SmoothScrolling";
 import Navbar from "@/components/layout/Navbar";
+import Preloader from "@/components/layout/Preloader";
 
-const inter = Inter({ subsets: ["latin"] });
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+// Tenor Sans: 
+const tenor = Tenor_Sans({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-tenor",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "BUILD FIX CONTRACTING COMPANY",
@@ -18,9 +33,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} bg-black text-white antialiased`}>
+      <body className={`${poppins.variable} ${tenor.variable} font-sans bg-black text-white antialiased`}>
+
+        <Preloader />
         <SmoothScrolling>
-          {/* <Navbar /> */}
+          <Navbar />
           {children}
         </SmoothScrolling>
       </body>

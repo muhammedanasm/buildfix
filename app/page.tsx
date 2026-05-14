@@ -1,16 +1,36 @@
+import About from "@/components/home/About";
+import CTASection from "@/components/home/CTASection";
+import FinalCTA from "@/components/home/FinalCTA";
 import Hero from "@/components/home/Hero";
+import MissionVision from "@/components/home/MissionVision";
+import Partners from "@/components/home/Partners";
+import Projects from "@/components/home/Projects";
+import Services from "@/components/home/Services";
+import Stats from "@/components/home/Stats";
+import Testimonials from "@/components/home/Testimonials";
 import ComingSoon from "@/components/layout/ComingSoon";
+import Footer from "@/components/layout/Footer";
+import WhatsAppButton from "@/components/layout/WhatsAppButton";
 
 export default function Home() {
   return (
     <>
-      <ComingSoon />
-      {/* <Hero /> */}
-      {/* സ്ക്രോളിംഗ് ഇനിയും വേണമെങ്കിൽ താഴെ ഒരു ഹൈറ്റ് ഉള്ള ഡിവി കൂടി ഇടാം */}
-      {/* <div className="h-[100vh] bg-black flex items-center justify-center">
-        <h2 className="text-white/10 text-[10vw] font-bold uppercase select-none">Services</h2>
-      </div> */}
-      {/* മറ്റു സെക്ഷനുകൾ (About, Services) താഴെ വരും */}
+      {/* <ComingSoon /> */}
+      <Hero />
+      <About />
+      <Projects />
+      <Partners />
+      <CTASection />
+      <Services />
+      <MissionVision />
+      <Stats />
+      <Testimonials />
+      <FinalCTA />
+
+      <Footer />
+
+      <WhatsAppButton />
+
     </>
   );
 }

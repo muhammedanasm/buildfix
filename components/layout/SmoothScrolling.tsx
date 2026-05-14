@@ -1,32 +1,34 @@
 "use client";
-
 import { usePathname } from "next/navigation";
-import { useEffect, ReactNode } from "react";
+import { useEffect, ReactNode, createContext, useContext, useState } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Lenis instance
+const LenisContext = createContext<Lenis | null>(null);
+export const useLenis = () => useContext(LenisContext);
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-export default function SmoothScrolling({
-    children,
-}: {
-    children: ReactNode;
-}) {
+export default function SmoothScrolling({ children }: { children: ReactNode }) {
     const pathname = usePathname();
+    const [lenis, setLenis] = useState<Lenis | null>(null);
 
     useEffect(() => {
-        const lenis = new Lenis({
+        const lenisInstance = new Lenis({
             duration: 1.5,
             smoothWheel: true,
         });
 
-        lenis.on("scroll", ScrollTrigger.update);
+        setLenis(lenisInstance);
+
+        lenisInstance.on("scroll", ScrollTrigger.update);
 
         const raf = (time: number) => {
-            lenis.raf(time);
+            lenisInstance.raf(time);
             requestAnimationFrame(raf);
         };
 
@@ -36,9 +38,13 @@ export default function SmoothScrolling({
         ScrollTrigger.refresh();
 
         return () => {
-            lenis.destroy();
+            lenisInstance.destroy();
         };
     }, [pathname]);
 
-    return <>{children}</>;
+    return (
+        <LenisContext.Provider value={lenis}>
+            {children}
+        </LenisContext.Provider>
+    );
 }
